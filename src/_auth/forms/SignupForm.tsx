@@ -1,3 +1,4 @@
+
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,7 @@ import { FormControl } from "@/components/ui/form";
 import { SignupValidation } from "@/lib/validation";
 import { Loader } from "lucide-react";
 import{ Link }from "react-router-dom";
+import { createUserAccount } from "@/lib/appwrite/api";
 
 function SignupForm() {
   const isLoading = false;
@@ -20,8 +22,11 @@ function SignupForm() {
       password: "",
     },
   });
-  function onSubmit(values: z.infer<typeof SignupValidation>) {
-   //const newUser = await createUserAccount(values);
+  async function onSubmit(values: z.infer<typeof SignupValidation>) {
+   const newUser = await createUserAccount(values);
+   if(!newUser){
+    return;
+   }
   }
 
   return (
