@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { FormControl } from "@/components/ui/form";
 import { SignupValidation } from "@/lib/validation";
 import { Loader } from "lucide-react";
+import{ Link }from "react-router-dom";
 
 function SignupForm() {
   const isLoading = false;
@@ -20,9 +21,7 @@ function SignupForm() {
     },
   });
   function onSubmit(values: z.infer<typeof SignupValidation>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+   //const newUser = await createUserAccount(values);
   }
 
   return (
@@ -37,7 +36,7 @@ function SignupForm() {
             Create a new account
           </h2>
           <p className="text-yellow-500 small-medioum md:base-regular mt-12">
-            To use Hivehub enter your details
+            To use Hivehub, please enter your details
           </p>
 
           <FormItem>
@@ -96,13 +95,17 @@ function SignupForm() {
               )}
             />
           </FormItem>
-          <Button type="submit" className="bg-yellow-500 h-9 p-5 m-3 w-48">
+          <Button type="submit" className="shad-button_primary h-9 p-5 m-3 w-48">
             {isLoading ? (
               <div className="flex center gap-2"><Loader/></div>
             ) : (
               "Sign Up"
             )}
           </Button>
+          <p className="small-medioum md:base-regular">
+            Already have an account?{" "}
+            <Link to='/sign-in' className='text-yellow-500 text-small-semibold ml-1'>Log in</Link>
+          </p>
         </div>
       </form>
     </Form>
