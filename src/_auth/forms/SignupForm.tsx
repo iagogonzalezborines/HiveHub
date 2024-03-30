@@ -1,4 +1,3 @@
-
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -8,11 +7,17 @@ import { Input } from "@/components/ui/input";
 import { FormControl } from "@/components/ui/form";
 import { SignupValidation } from "@/lib/validation";
 import { Loader } from "lucide-react";
-import{ Link }from "react-router-dom";
-import { createUserAccount } from "@/lib/appwrite/api";
+import { Link } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
+import { useCreateUserAccount, useSignInAccount } from "@/lib/react-query/queriesAndMutations";
 
 function SignupForm() {
-  const isLoading = false;
+  const { toast } = useToast();
+
+  const { mutateAsync: createUserAccount, isLoading: isCreatingUser } = useCreateUserAccount();
+
+  const { mutateAsync: signInAccount, isLoading: isSigningIn } = useSignInAccount();
+
   const form = useForm<z.infer<typeof SignupValidation>>({
     resolver: zodResolver(SignupValidation),
     defaultValues: {
@@ -23,10 +28,22 @@ function SignupForm() {
     },
   });
   async function onSubmit(values: z.infer<typeof SignupValidation>) {
-   const newUser = await createUserAccount(values);
-   if(!newUser){
-    return;
-   }
+    const newUser = await createUserAccount(values);
+    if (!newUser) {
+      return toast({
+        title: "Sign up failed. Please try again",
+      });
+    }
+    const session = await signInAccount({ 
+      email: values.email,
+      password: values.password,
+    })
+
+    if(!session){
+      return toast({
+        title: "Sign in failed. Please try again",
+      });
+    }
   }
 
   return (
@@ -100,16 +117,26 @@ function SignupForm() {
               )}
             />
           </FormItem>
-          <Button type="submit" className="shad-button_primary h-9 p-5 m-3 w-48">
-            {isLoading ? (
-              <div className="flex center gap-2"><Loader/></div>
+          <Button
+            type="submit"
+            className="shad-button_primary h-9 p-5 m-3 w-48"
+          >
+            {isCreatingUser ? (
+              <div className="flex center gap-2">
+                <Loader />
+              </div>
             ) : (
               "Sign Up"
             )}
           </Button>
           <p className="small-medioum md:base-regular">
             Already have an account?{" "}
-            <Link to='/sign-in' className='text-yellow-500 text-small-semibold ml-1'>Log in</Link>
+            <Link
+              to="/sign-in"
+              className="text-yellow-500 text-small-semibold ml-1"
+            >
+              Log in
+            </Link>
           </p>
         </div>
       </form>
