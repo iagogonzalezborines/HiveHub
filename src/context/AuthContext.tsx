@@ -16,7 +16,7 @@ const INITIAL_STATE = {
     user: INITIAL_USER,
     isAuthenticated: false,
     isLoading: false,
-    setUser: (user: IUser) => {},
+    setUser: () => {},
     setIsAuthenticated: () => {},
     checkAuthUser: async () => false as boolean,
 }
@@ -66,10 +66,10 @@ const AuthProvider = ({children}: {children: React.ReactNode}) => {
 
     const value = {
         user, 
-        setUser, // Asigna la función setUser existente
+        setUser: () => {},
         isLoading,
         isAuthenticated,
-        setIsAuthenticated,
+        setIsAuthenticated: () => {}, // Update the type of setIsAuthenticated to match the expected type
         checkAuthUser
     };
 
