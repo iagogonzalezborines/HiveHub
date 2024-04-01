@@ -66,10 +66,10 @@ const AuthProvider = ({children}: {children: React.ReactNode}) => {
 
     const value = {
         user, 
-        setUser: () => {},
+        setUser: () => {}, // Update the type of setUser to () => void
         isLoading,
-        isAuthenticated,
-        setIsAuthenticated: () => {}, // Update the type of setIsAuthenticated to match the expected type
+        isAuthenticated ,
+        setIsAuthenticated: () => {},
         checkAuthUser
     };
 
